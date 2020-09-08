@@ -15,7 +15,8 @@
     "core-js": "^3.6.5",
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.2",
-    "vue": "^2.6.12"
+    "vue": "^2.6.12",
+    "vue-websocket": "^0.2.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

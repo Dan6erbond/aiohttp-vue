@@ -10,10 +10,8 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
-console.log(window.location.host);
-
 Vue.prototype.$http = axios.create({
-  baseURL: window.location.host,
+  baseURL: window.location.host.split(":")[0],
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
