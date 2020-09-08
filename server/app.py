@@ -4,10 +4,10 @@ from aiohttp import web
 
 routes = web.RouteTableDef()
 
-dist_path = os.path.join(os.path.dirname(__file__), "..", "dist")
+dist_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dist"))
 
 
-@routes.get("/{base:(?!.*(api)).*}")
+@routes.get("/{base:(?!(api|ws)).*}")
 async def index(request):
     html = False
     for accept in request.headers.getall('ACCEPT', []):
@@ -26,6 +26,4 @@ async def index(request):
         else:
             return web.HTTPNotFound()
 
-app = web.Application()
-app.add_routes(routes)
-app.add_routes([web.static("/", dist_path)])
+routes.static("/", dist_path)

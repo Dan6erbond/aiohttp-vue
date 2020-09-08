@@ -3,10 +3,6 @@ from aiohttp import web
 routes = web.RouteTableDef()
 
 
-@routes.get("")
+@routes.get("/api")
 async def index(request):
     return web.Response(text='Hello Aiohttp!')
-
-
-api = web.Application()
-api.add_routes(routes)

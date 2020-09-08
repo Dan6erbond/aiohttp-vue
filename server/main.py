@@ -1,26 +1,47 @@
 import asyncio
+import os
 
 from aiohttp import web
+import psutil
+import weakref
 
-from .api import api
-from .app import app
+from app import routes as app_routes
+from api import routes as api_routes
+from websocket import routes as websocket_routes
 
 loop = asyncio.get_event_loop()
-runners = list()
+
+runner = None
+vue_proc = None
+
+
+async def start():
+    global runner, vue_proc
+
+    app = web.Application()
+    app['websockets'] = weakref.WeakSet()
+
+    app.add_routes(api_routes)
+    app.add_routes(websocket_routes)
+    app.add_routes(app_routes)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "127.0.0.1", 8080)
+    await site.start()
+
+    print("Running server on: http://127.0.0.1:8080")
+
+    frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    vue_proc = await asyncio.create_subprocess_shell(
+        f"yarn --cwd {frontend_path} build --watch",
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
+
+    print("Running Vue build in watch mode:", vue_proc.pid)
 
 
 def main():
-    async def start():
-        async def start_site(app, address="127.0.0.1", port=8080):
-            runner = web.AppRunner(app)
-            runners.append(runner)
-            await runner.setup()
-            site = web.TCPSite(runner, address, port)
-            await site.start()
-
-        await start_site(app)
-        await start_site(api, port=8081)
-
     loop.create_task(start())
 
     try:
@@ -28,8 +49,13 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        for runner in runners:
+        if runner:
+            print("Killing application server.")
             loop.run_until_complete(runner.cleanup())
+        if vue_proc:
+            print("Killing Vue build process:", vue_proc.pid)
+            p = psutil.Process(vue_proc.pid)
+            p.terminate()
 
 
 if __name__ == "__main__":
