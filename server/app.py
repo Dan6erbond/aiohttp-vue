@@ -26,4 +26,4 @@ async def index(request):
         else:
             return web.HTTPNotFound()
 
-routes.static("/", dist_path)
+# routes.static("/{base:(?!(api|ws)).*}", dist_path)

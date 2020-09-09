@@ -5,6 +5,7 @@ import webbrowser
 
 import psutil
 from aiohttp import web
+from aiohttp_swagger import setup_swagger
 
 from api import routes as api_routes
 from app import routes as app_routes
@@ -26,6 +27,8 @@ async def start():
     app.add_routes(api_routes)
     app.add_routes(websocket_routes)
     app.add_routes(app_routes)
+
+    setup_swagger(app)
 
     runner = web.AppRunner(app)
     await runner.setup()
