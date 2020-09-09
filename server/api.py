@@ -3,7 +3,7 @@ from aiohttp import web
 routes = web.RouteTableDef()
 
 
-@routes.get("/api")
+@routes.get("")
 async def index(request):
     """
     ---
@@ -19,3 +19,6 @@ async def index(request):
             description: invalid HTTP Method
     """
     return web.Response(text='Hello Aiohttp!')
+
+app = web.Application()
+app.add_routes(routes)

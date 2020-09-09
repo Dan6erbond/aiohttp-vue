@@ -7,7 +7,7 @@ routes = web.RouteTableDef()
 dist_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dist"))
 
 
-@routes.get("/{base:(?!(api|ws)).*}")
+@routes.get("/{tail:(?!(api|ws)).*}")
 async def index(request):
     html = False
     for accept in request.headers.getall('ACCEPT', []):
@@ -26,4 +26,5 @@ async def index(request):
         else:
             return web.HTTPNotFound()
 
-# routes.static("/{base:(?!(api|ws)).*}", dist_path)
+app = web.Application()
+app.add_routes(routes)

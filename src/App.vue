@@ -27,11 +27,14 @@
     <div v-if="systemUsage" class="resource-monitor card">
       <b>Process Name</b>
       {{systemUsage.name}}
-      <br>
-      <b>CPU Usage</b> {{cpuPercent}}%
+      <br />
+      <br />
+      <b>CPU Usage</b>
+      {{cpuPercent}}%
       <b-progress :value="cpuPercent" max="100" show-progress animated></b-progress>
-      <br>
-      <b>Memory Usage</b> {{memory}} MB / {{memoryPercent}}%
+      <br />
+      <b>Memory Usage</b>
+      {{memory}} MB / {{memoryPercent}}%
       <b-progress :value="memoryPercent" max="100" show-progress animated></b-progress>
     </div>
   </div>
@@ -56,6 +59,7 @@ export default {
     this.connection.onmessage = (event) => {
       this.socketMsgs.push(event);
       this.systemUsage = JSON.parse(event.data);
+      console.log(event);
     };
   },
   computed: {

@@ -1,4 +1,5 @@
 import asyncio
+import weakref
 
 import psutil
 from aiohttp import web
@@ -6,7 +7,7 @@ from aiohttp import web
 routes = web.RouteTableDef()
 
 
-@routes.get("/ws/{pid}")
+@routes.get("/{pid}")
 async def websocket_handler(request):
     ws = web.WebSocketResponse()
     await ws.prepare(request)
@@ -15,7 +16,7 @@ async def websocket_handler(request):
 
     try:
         p = psutil.Process(int(request.match_info["pid"]))
-    except:
+    except BaseException:
         return web.HTTPServerError(reason="Process not found.")
 
     try:
@@ -31,3 +32,8 @@ async def websocket_handler(request):
         request.app['websockets'].discard(ws)
 
     return ws
+
+app = web.Application()
+app['websockets'] = weakref.WeakSet()
+
+app.add_routes(routes)

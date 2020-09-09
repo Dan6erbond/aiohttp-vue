@@ -9,6 +9,9 @@ class Config(object):
             static_dir="dist",
             host="127.0.0.1",
             port=8080,
+            description="A minimal Discord bot dashboard shipped with the DiscordPyCLI by Amelia Cabotte and RaviAnand Mohabir.",
+            title="DiscordPyCLI Dashboard",
+            contact_email="discordpycli@gmail.com",
         )
 
     def __getitem__(self, attr_name):

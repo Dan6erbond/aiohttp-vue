@@ -1,16 +1,15 @@
 import asyncio
 import os
-import weakref
 import webbrowser
 
 import psutil
 from aiohttp import web
 from aiohttp_swagger import setup_swagger
 
-from api import routes as api_routes
-from app import routes as app_routes
+from api import app as api
+from app import app as app
 from config import config
-from websocket import routes as websocket_routes
+from websocket import app as websocket
 
 loop = asyncio.get_event_loop()
 
@@ -21,14 +20,17 @@ vue_proc = None
 async def start():
     global runner, vue_proc
 
-    app = web.Application()
-    app['websockets'] = weakref.WeakSet()
+    setup_swagger(api,
+                  description=config.description,
+                  title=config.title,
+                  ui_version=3,
+                  contact=config.contact_email,
+                  api_base_url="/api",
+                  swagger_url="doc")
 
-    app.add_routes(api_routes)
-    app.add_routes(websocket_routes)
-    app.add_routes(app_routes)
+    app.add_subapp("/api", api)
 
-    setup_swagger(app, ui_version=3)
+    app.add_subapp("/ws", websocket)
 
     runner = web.AppRunner(app)
     await runner.setup()
