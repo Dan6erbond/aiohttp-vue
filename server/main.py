@@ -1,12 +1,14 @@
 import asyncio
 import os
-
-from aiohttp import web
-import psutil
 import weakref
+import webbrowser
 
-from app import routes as app_routes
+import psutil
+from aiohttp import web
+
 from api import routes as api_routes
+from app import routes as app_routes
+from config import config
 from websocket import routes as websocket_routes
 
 loop = asyncio.get_event_loop()
@@ -27,18 +29,24 @@ async def start():
 
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, "127.0.0.1", 8080)
+    site = web.TCPSite(runner, config.host, config.port)
     await site.start()
 
-    print("Running server on: http://127.0.0.1:8080")
+    url = f"http://{config.host}:{config.port}"
+
+    print("Running server on:", url)
 
     frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    vue_proc = await asyncio.create_subprocess_shell(
-        f"yarn --cwd {frontend_path} build --watch",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE)
+
+    if config.debug:
+        vue_proc = await asyncio.create_subprocess_shell(
+            f"yarn --cwd {frontend_path} build --watch",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
 
     print("Running Vue build in watch mode:", vue_proc.pid)
+
+    webbrowser.open(url, 2)
 
 
 def main():

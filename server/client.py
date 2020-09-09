@@ -1,3 +1,6 @@
+"""This is an example file that connects to the websocket and logs its messages.
+"""
+
 import asyncio
 import os
 

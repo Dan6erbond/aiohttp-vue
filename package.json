@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service build --watch && python server/main.py"
+    "dev": "cross-env SERVER_ENV=development python server/main.py",
+    "prod": "cross-env SERVER_ENV=production python server/main.py"
   },
   "dependencies": {
     "axios": "^0.20.0",
@@ -23,6 +24,7 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "^2.6.11"
