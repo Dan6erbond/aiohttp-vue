@@ -18,4 +18,4 @@ async def index(request):
         "405":
             description: invalid HTTP Method
     """
-    return web.Response(text='Hello Aiohttp!', ui_version=3)
+    return web.Response(text='Hello Aiohttp!')

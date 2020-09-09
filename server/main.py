@@ -28,7 +28,7 @@ async def start():
     app.add_routes(websocket_routes)
     app.add_routes(app_routes)
 
-    setup_swagger(app)
+    setup_swagger(app, ui_version=3)
 
     runner = web.AppRunner(app)
     await runner.setup()
