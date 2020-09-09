@@ -9,7 +9,7 @@ async def index(request):
     ---
     description: This endpoint tests the API routes.
     tags:
-    - Health check
+    - API Base
     produces:
     - text/plain
     responses:
