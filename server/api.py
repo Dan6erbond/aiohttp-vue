@@ -7,16 +7,16 @@ routes = web.RouteTableDef()
 async def index(request):
     """
     ---
-    description: This end-point allow to test that service is up.
+    description: This endpoint tests the API routes.
     tags:
     - Health check
     produces:
     - text/plain
     responses:
         "200":
-            description: successful operation. Return "pong" text
+            description: Successful operation returns "Hello Aiohttp!"
         "405":
-            description: invalid HTTP Method
+            description: Invalid HTTP method.
     """
     return web.Response(text='Hello Aiohttp!')
 
